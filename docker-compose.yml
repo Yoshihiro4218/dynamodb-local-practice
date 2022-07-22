@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    user: root
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    volumes:
+      - ./dynamodb-local-data:/data
+    ports:
+      - "4000:8000"
+
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin:latest
+    environment:
+      - DYNAMO_ENDPOINT=dynamodb-local:8000
+    ports:
+      - "4001:8001"
+    depends_on:
+      - dynamodb-local
