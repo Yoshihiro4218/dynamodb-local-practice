@@ -28,6 +28,12 @@ public class UserController {
         }
     }
 
+    // test
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable String id) {
+        return repository.get(id, User.class);
+    }
+
     private void createAndSaveUser() {
         repository.save(User.builder()
                             .id(UUID.randomUUID().toString())
