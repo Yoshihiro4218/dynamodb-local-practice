@@ -34,6 +34,12 @@ public class UserController {
         return repository.get(id, User.class);
     }
 
+    // test
+    @GetMapping("")
+    public List<User> getAllUsers() {
+        return repository.scan(User.class);
+    }
+
     private void createAndSaveUser() {
         repository.save(User.builder()
                             .id(UUID.randomUUID().toString())

@@ -28,4 +28,10 @@ public class DynamoDBRepository {
         DynamoDbTable<T> table = client.table(tableName, TableSchema.fromBean(recordClass));
         return table.getItem(Key.builder().partitionValue(key).build());
     }
+
+    public <T> List<T> scan(Class<T> recordClass) {
+        String tableName = recordClass.getSimpleName().toLowerCase(Locale.ENGLISH);
+        DynamoDbTable<T> table = client.table(tableName, TableSchema.fromBean(recordClass));
+        return table.scan().items().stream().toList();
+    }
 }
