@@ -6,7 +6,7 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.*;
 import springfox.documentation.spring.web.plugins.*;
 
-//
+// "/swagger-ui/" で表示
 @Configuration
 public class OpenApiConfiguration {
     @Bean
