@@ -6,6 +6,8 @@ import software.amazon.awssdk.enhanced.dynamodb.*;
 
 import java.util.*;
 
+import static software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional.keyEqualTo;
+
 @Repository
 @AllArgsConstructor
 public class DynamoDBRepository {
@@ -33,5 +35,18 @@ public class DynamoDBRepository {
         String tableName = recordClass.getSimpleName().toLowerCase(Locale.ENGLISH);
         DynamoDbTable<T> table = client.table(tableName, TableSchema.fromBean(recordClass));
         return table.scan().items().stream().toList();
+    }
+
+    // index で引くとき
+    public <T> T getByXXX(int key, Class<T> recordClass) {
+        String tableName = recordClass.getSimpleName().toLowerCase(Locale.ENGLISH);
+        String indexName = recordClass.getSimpleName().toLowerCase(Locale.ENGLISH) + "_index"; // 適当
+        DynamoDbTable<T> table = client.table(tableName, TableSchema.fromBean(recordClass));
+        DynamoDbIndex<T> index = table.index(indexName);
+        return index.query(r -> r.queryConditional(keyEqualTo(k -> k.partitionValue(key))))
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("exception")) // 適当
+                    .items().get(0);
     }
 }
